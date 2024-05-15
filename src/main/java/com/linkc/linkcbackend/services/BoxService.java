@@ -20,12 +20,14 @@ public class BoxService {
     private final BoxHistoryRepository boxHistoryRepository;
     private final UserRepository userRepository;
     private final ParqioService parqioService;
+    private final AzureService azureService;
 
-    public BoxService(BoxRepository boxRepository, UserRepository userRepository, ParqioService parqioService, BoxHistoryRepository boxHistoryRepository) {
+    public BoxService(BoxRepository boxRepository, UserRepository userRepository, ParqioService parqioService, BoxHistoryRepository boxHistoryRepository, AzureService azureService) {
         this.userRepository = userRepository;
         this.boxRepository = boxRepository;
         this.parqioService = parqioService;
         this.boxHistoryRepository = boxHistoryRepository;
+        this.azureService = azureService;
     }
 
     private List<BoxStripped> getAllBoxes() {
@@ -35,11 +37,11 @@ public class BoxService {
 
         allBoxes.forEach(box -> {
             allBoxesData.add(
-                new BoxStripped.builder()
-                        .id(box.getId())
-                        .location(box.getLocation())
-                        .status(box.getStatus())
-                        .build()
+                    new BoxStripped.builder()
+                            .id(box.getId())
+                            .location(box.getLocation())
+                            .status(box.getStatus())
+                            .build()
             );
         });
 
@@ -81,7 +83,11 @@ public class BoxService {
             throw new Exception("User can not open this box");
         }
 
-        parqioService.openBox();
+//        parqioService.openBox();
+        SendDeviceRequest sendDeviceRequest = new SendDeviceRequest();
+        sendDeviceRequest.setDeviceId(box.getName());
+        sendDeviceRequest.setDeviceId("UNLOCK");
+        azureService.sendToDevice(sendDeviceRequest);
 
         boxRepository.save(box);
         BoxHistory boxHistory = new BoxHistory();
@@ -94,7 +100,7 @@ public class BoxService {
         boxHistoryRepository.save(boxHistory);
     }
 
-    public void closeReservation(User user, Box box) throws Exception{
+    public void closeReservation(User user, Box box) throws Exception {
         if (!user.getId().equalsIgnoreCase(box.getReservedBy()) && !user.getId().equalsIgnoreCase(box.getToBeOpenedBy())) {
             throw new Exception("User can not do this");
         }
