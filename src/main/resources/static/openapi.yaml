@@ -1,0 +1,798 @@
+openapi: 3.0.1
+info:
+  title: User Management API
+  description: API for managing users
+  version: 1.0.0
+paths:
+  /api/v1/admin/users:
+    get:
+      summary: Get all users
+      operationId: getAllUsers
+      tags:
+        - Admin Controller
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      firstname: Ram
+                      lastname: Karki
+                      number: "1234567890"
+                      email: ram.karki@example.com
+                      profilePictureUri: "https://example.com/images/ram.jpg"
+                      role: admin
+                      parqioAPIKey: DEF456WXY
+                    - id: 2
+                      firstname: Hari
+                      lastname: Karki
+                      number: "1020304050"
+                      email: hari.karki@example.com
+                      profilePictureUri: "https://example.com/images/hari.jpg"
+                      role: user
+                      parqioAPIKey: DEF123GHR
+
+    post:
+      summary: Create a new user
+      operationId: createUser
+      tags:
+        - Admin Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+            examples:
+              sample:
+                value:
+                  firstname: John
+                  lastname: Doe
+                  number: "+123456789"
+                  email: john.doe@example.com
+                  profilePictureUri: "https://example.com/images/john.jpg"
+                  role: admin
+                  parqioAPIKey: DEF456WXY
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                sample:
+                  value:
+                    id: 1
+                    firstname: John
+                    lastname: Doe
+                    number: "+123456789"
+                    email: john.doe@example.com
+                    profilePictureUri: "https://example.com/images/john.jpg"
+                    role: admin
+                    parqioAPIKey: DEF456WXY
+  /api/v1/admin/users/{id}:
+    patch:
+      summary: Update user by ID
+      operationId: updateUserById
+      tags:
+        - Admin Controller
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to update
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+            examples:
+              sample:
+                value:
+                  firstname: John
+                  lastname: Doe
+                  number: "+123456789"
+                  email: john.doe@example.com
+                  profilePictureUri: "https://example.com/images/john.jpg"
+                  role: admin
+                  parqioAPIKey: DEF456WXY
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                sample:
+                  value:
+                    id: 1
+                    firstname: John
+                    lastname: Doe
+                    number: "+123456789"
+                    email: john.doe@example.com
+                    profilePictureUro: "https://example.com/images/john.jpg"
+                    role: admin
+                    parqioAPIKey: DEF456WXY
+        '404':
+          description: User not found
+
+    get:
+      summary: Get user by ID
+      operationId: getUserById
+      tags:
+        - Admin Controller
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to retrieve
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    firstname: John
+                    lastname: Doe
+                    number: "+123456789"
+                    email: john.doe@example.com
+                    profilePictureUri: "https://example.com/images/john.jpg"
+                    role: admin
+                    parqioAPIKey: DEF456WXY
+        '404':
+          description: User not found
+    delete:
+      summary: Delete user by ID
+      operationId: deleteUserById
+      tags:
+        - Admin Controller
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the user to delete
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+
+  /api/v1/admin/boxes:
+    post:
+      summary: Create a new box
+      operationId: createBox
+      tags:
+        - Admin Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewBox'
+            examples:
+              sample:
+                value:
+                  id: 1
+                  name: Box1
+                  location: kathmandu
+                  status: Available
+                  reservedBy: John Doe
+                  toBeOpenBy: Sam Smith
+                  timeBooked: "2024-05-17T10:00:00Z"
+      responses:
+        '201':
+          description: Box created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Box'
+              examples:
+                sample:
+                  value:
+                    id: 1
+                    name: Box1
+                    location: kathmandu
+                    status: Available
+                    reservedBy: John Doe
+                    toBeOpenBy: Sam Smith
+                    timeBooked: "2024-05-17T10:00:00Z"
+  /api/v1/box:
+    get:
+      summary: Get boxes reserved by user
+      operationId: getReservedBoxesByUser
+      tags:
+        - Box Controller
+      parameters:
+        - name: userId
+          in: query
+          description: Filter boxes reserved by user ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BoxReservation'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      name: Box 1
+                      location: Location 1
+                      status: available
+                      reservedBy: John Doe
+                      toBeOpenedBy: Jane Smith
+                      timeBooked: "2024-05-17T10:00:00Z"
+                    - id: 2
+                      name: Box 2
+                      location: Location 2
+                      status: available
+                      reservedBy: John Doe
+                      toBeOpenedBy: Jane Smith
+                      timeBooked: "2024-05-17T11:00:00Z"
+                    - id: 3
+                      name: Box 3
+                      location: Location 3
+                      status: available
+                      reservedBy: John Doe
+                      toBeOpenedBy: Jane Smith
+                      timeBooked: "2024-05-17T12:00:00Z"
+    post:
+      summary: Reserve a box
+      operationId: reserveBox
+      tags:
+        - Box Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationRequest'
+      responses:
+        '201':
+          description: Box reserved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoxReservation'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    name: Box 1
+                    location: Location 1
+                    status: Reserved
+                    reservedBy: John Doe
+                    toBeOpenedBy: Jane Smith
+                    timeBooked: "2024-05-17T10:00:00Z"
+  /api/v1/box/open:
+    post:
+      summary: Open a box
+      operationId: openBox
+      tags:
+        - Box Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpenBoxRequest'
+      responses:
+        '200':
+          description: Box opened successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpenBoxResponse'
+              examples:
+                example-1:
+                  value:
+                    message: Box opened successfully
+  /api/v1/box/close:
+    post:
+      summary: Close a reservation
+      operationId: closeReservation
+      tags:
+        - Box Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloseReservationRequest'
+      responses:
+        '200':
+          description: Reservation closed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloseReservationResponse'
+              examples:
+                example-1:
+                  value:
+                    message: Reservation closed successfully
+  /api/v1/god/delete/{number}:
+    delete:
+      summary: Delete a user by number
+      operationId: deleteUserByNumber
+      tags:
+        - God Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteUserRequest'
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+  /echo:
+    get:
+      summary: get test message
+      operationId: getTestMessage
+      tags:
+        - Test Controller
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Hello world
+  /api/v1/user:
+    get:
+      summary: Get a user by ID
+      operationId: getUserById
+      tags:
+        - User Controller
+      parameters:
+        - name: id
+          in: query
+          description: ID of the user to retrieve
+          required: true
+          schema:
+            type: integer
+        - name: firstname
+          in: query
+          description: Filter by first name
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          description: Filter by last name
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Filter by email
+          schema:
+            type: string
+        - name: number
+          in: query
+          description: Filter by phone number
+          schema:
+            type: string
+        - name: profilePictureUri
+          in: query
+          description: Filter by profile picture URI
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    patch:
+      summary: Update authenticated user
+      operationId: updateAuthenticatedUser
+      tags:
+        - User Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /api/v1/auth/register:
+    post:
+      summary: Register a new user
+      operationId: registerUser
+      tags:
+        - Authentication Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterUserRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterUser'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    firstname: John
+                    lastname: Doe
+                    email: john.doe@example.com
+                    number: +1234567890
+                    profilePictureEncodedBase64: SGVsbG8gV29ybGQ=
+  /api/v1/auth/authenticate:
+    post:
+      summary: Authenticate user
+      operationId: authenticateUser
+      tags:
+        - Authentication Controller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticateUserRequest'
+      responses:
+        '200':
+          description: User authenticated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticateUser'
+              examples:
+                example-1:
+                  value:
+                    id: 1
+                    firstname: John
+                    lastname: Doe
+                    email: john.doe@example.com
+                    number: +1234567890
+                    profilePictureEncodedBase64: SGVsbG8gV29ybGQ=
+        '401':
+          description: Unauthorized
+
+components:
+  schemas:
+    AuthenticateUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        number:
+          type: string
+          example: +1234567890
+        profilePictureEncodedBase64:
+          type: string
+          example: SGVsbG8gV29ybGQ=
+    AuthenticateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: john.doe@example.com
+        password:
+          type: string
+          example: password123
+    RegisterUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        number:
+          type: string
+          example: +1234567890
+        profilePictureEncodedBase64:
+          type: string
+          example: SGVsbG8gV29ybGQ=
+    RegisterUserRequest:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        password:
+          type: string
+          example: password123
+        email:
+          type: string
+          example: john.doe@example.com
+        number:
+          type: string
+          example: +1234567890
+        profilePictureEncodedBase64:
+          type: string
+          example: SGVsbG8gV29ybGQ=
+    UpdateUserRequest:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        email:
+          type: string
+          example: john.doe@example.com
+        number:
+          type: string
+          example: +1234567890
+        profilePictureUri:
+          type: string
+          example: https://example.com/profile.jpg
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        firstname:
+          type: string
+          example: Ram
+        lastname:
+          type: string
+          example: Karki
+        number:
+          type: string
+          example: "12345670"
+        email:
+          type: string
+          format: email
+          example: ram.karki@example.com
+        profilePictureUri:
+          type: string
+          format: uri
+          example: "https://example.com/images/ram.jpg"
+        role:
+          type: string
+          example: admin
+        parqioAPIKey:
+          type: string
+          example: ABC123XYZ
+
+    NewUser:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        number:
+          type: string
+          example: "+123456789"
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        profilePictureUri:
+          type: string
+          format: uri
+          example: "https://example.com/images/john.jpg"
+        role:
+          type: string
+          example: admin
+        parqioAPIKey:
+          type: string
+          example: ABC123XYZ
+    UpdateUser:
+      type: object
+      properties:
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+        number:
+          type: string
+          example: "+123456789"
+        email:
+          type: string
+          format: email
+          example: john.doe@example.com
+        profilePictureUri:
+          type: string
+          format: uri
+          example: "https://example.com/images/john.jpg"
+        role:
+          type: string
+          example: admin
+        parqioAPIKey:
+          type: string
+          example: ABC123XYZ
+    Box:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Box1
+        location:
+          type: string
+          example: kathmandu
+        status:
+          type: string
+          example: Available
+        reservedBy:
+          type: string
+          nullable: true
+          example: null
+        toBeOpenBy:
+          type: string
+          nullable: true
+          example: null
+        timeBooked:
+          type: string
+          nullable: true
+          example: null
+    NewBox:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Box1
+        location:
+          type: string
+          example: kathmandu
+        status:
+          type: string
+          example: Available
+        reservedBy:
+          type: string
+          nullable: true
+          example: John Doe
+        toBeOpenBy:
+          type: string
+          nullable: true
+          example: Sam Smith
+        timeBooked:
+          type: string
+          nullable: true
+          example: "2024-05-17T10:00:00Z"
+    BoxReservation:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Box 1
+        location:
+          type: string
+          example: Location 1
+        status:
+          type: string
+          example: Reserved
+        reservedBy:
+          type: string
+          example: John Doe
+        toBeOpenedBy:
+          type: string
+          example: Jane Smith
+        timeBooked:
+          type: string
+          format: date-time
+          example: "2024-05-17T10:00:00Z"
+    ReservationRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 123
+        toBeOpenedBy:
+          type: string
+          example: John Doe
+        reservedTo:
+          type: string
+          example: Jane Smith
+    OpenBoxRequest:
+      type: object
+      properties:
+        boxId:
+          type: integer
+          example: 456
+        openedBy:
+          type: string
+          example: Jane Smith
+    OpenBoxResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Box opened successfully
+    CloseReservationRequest:
+      type: object
+      properties:
+        reservationId:
+          type: integer
+          example: 123
+    CloseReservationResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Reservation closed successfully
+    DeleteUserRequest:
+      type: object
+      properties:
+        number:
+          type: string
+          example: +1234567890
