@@ -59,9 +59,9 @@ public class UserService {
             user.setProfilePictureUri(filename);
         }
 
-        if (updates.containsKey("sms_code")) {
-            String apiKey = parqioService.getAPIKey(user.getNumber(), (String) updates.get("sms_code"));
-            user.setParqioAPIKey(apiKey);
+        if (updates.containsKey("sms_code")) { // ToDO: verify sms code
+//            String apiKey = parqioService.getAPIKey(user.getNumber(), (String) updates.get("sms_code"));
+//            user.setParqioAPIKey(apiKey);
         }
 
         userRepository.save(user);

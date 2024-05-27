@@ -44,7 +44,7 @@ public class AuthenticationService {
         User user = addUser(request, Role.ROLE_USER);
 
         var jwtToken = jwtService.generateToken(user);
-        parqioService.sendSmsCode(user.getNumber());
+//        parqioService.sendSmsCode(user.getNumber()); ToDo Send Sms code
 
         return new AuthenticationResponse.AuthenticationResponseBuilder()
                 .token(jwtToken)
