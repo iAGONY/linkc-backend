@@ -4,6 +4,7 @@ import com.linkc.linkcbackend.controllers.UserController;
 import com.linkc.linkcbackend.domain.SendDeviceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -21,11 +22,13 @@ public class AzureService {
         this.restClient = RestClient.create();
     }
 
-    private final String URL = "https://iotfunctions.azurewebsites.net/api/SendToDevice?code=Zg78UfP0bPj1V3LBosT2hQh8PIOHhYcoNo41uAdWrgqoAzFuGDBXBg%3D%3D";
+    @Value("${IOT_URL}")
+    private String iotURL;
 
     public void sendToDevice(SendDeviceRequest sendDeviceRequest) {
+        logger.info("url :: " + iotURL);
         ResponseEntity response = restClient.post()
-                .uri(URL)
+                .uri(iotURL)
                 .contentType(APPLICATION_JSON)
                 .body(sendDeviceRequest)
                 .retrieve()

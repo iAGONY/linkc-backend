@@ -86,7 +86,7 @@ public class BoxService {
 //        parqioService.openBox();
         SendDeviceRequest sendDeviceRequest = new SendDeviceRequest();
         sendDeviceRequest.setDeviceId(box.getName());
-        sendDeviceRequest.setDeviceId("UNLOCK");
+        sendDeviceRequest.setCommand("open");
         azureService.sendToDevice(sendDeviceRequest);
 
         boxRepository.save(box);

@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
-  title: User Management API
-  description: API for managing users
+  title: Linkc Backed Apis
+  description: API for linkc
   version: 1.0.0
 paths:
   /api/v1/admin/users:
@@ -131,7 +131,7 @@ paths:
 
     get:
       summary: Get user by ID
-      operationId: getUserById
+      operationId: getUser
       tags:
         - Admin Controller
       parameters:
@@ -346,12 +346,13 @@ paths:
       operationId: deleteUserByNumber
       tags:
         - God Controller
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteUserRequest'
+      parameters:
+        - name: number
+          in: path
+          required: true
+          description: The ID of the user to update
+          schema:
+            type: string
       responses:
         '204':
           description: User deleted successfully

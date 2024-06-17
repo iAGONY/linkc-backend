@@ -10,5 +10,5 @@ import lombok.ToString;
 public class SendDeviceRequest {
 
     private String deviceId;
-    private String message;
+    private String command;
 }
