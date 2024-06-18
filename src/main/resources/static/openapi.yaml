@@ -10,6 +10,8 @@ paths:
       operationId: getAllUsers
       tags:
         - Admin Controller
+      security:
+        - BearerAuth: []
       responses:
         '200':
           description: Successful operation
@@ -44,6 +46,8 @@ paths:
       operationId: createUser
       tags:
         - Admin Controller
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -84,6 +88,8 @@ paths:
       operationId: updateUserById
       tags:
         - Admin Controller
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -134,6 +140,8 @@ paths:
       operationId: getUser
       tags:
         - Admin Controller
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: path
@@ -187,6 +195,8 @@ paths:
       operationId: createBox
       tags:
         - Admin Controller
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -226,6 +236,8 @@ paths:
       operationId: getReservedBoxesByUser
       tags:
         - Box Controller
+      security:
+        - BearerAuth: []
       parameters:
         - name: userId
           in: query
@@ -271,6 +283,8 @@ paths:
       operationId: reserveBox
       tags:
         - Box Controller
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -300,6 +314,8 @@ paths:
       operationId: openBox
       tags:
         - Box Controller
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -323,6 +339,8 @@ paths:
       operationId: closeReservation
       tags:
         - Box Controller
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -381,6 +399,8 @@ paths:
       operationId: getUserById
       tags:
         - User Controller
+      security:
+        - BearerAuth: []
       parameters:
         - name: id
           in: query
@@ -427,6 +447,8 @@ paths:
       operationId: updateAuthenticatedUser
       tags:
         - User Controller
+      security:
+        - BearerAuth: []
       requestBody:
         required: true
         content:
@@ -500,6 +522,11 @@ paths:
           description: Unauthorized
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, just for documentation purposes
   schemas:
     AuthenticateUser:
       type: object

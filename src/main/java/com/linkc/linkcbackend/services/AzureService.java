@@ -22,7 +22,7 @@ public class AzureService {
         this.restClient = RestClient.create();
     }
 
-    @Value("${IOT_URL}")
+    @Value("${IOT_API_URL}")
     private String iotURL;
 
     public void sendToDevice(SendDeviceRequest sendDeviceRequest) {
